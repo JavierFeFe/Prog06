@@ -1,30 +1,25 @@
 package Clientes;
 
-import modelo.clientes.ObjetoCliente;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static String menu = //Menú que se mostrará
-            "\nOpciones disponibles: \n\n" +
-                    "1 - Añadir Cliente.\n" +
-                    "2 - Listar Clientes.\n" +
-                    "3 - Buscar Clientes.\n" +
-                    "4 - Borrar Cliente.\n" +
-                    "5 - Borrar fichero de clientes completamente.\n" +
-                    "0 - Salir de la aplicación.\n";
-    public static void main (String[] args){
 
+    public static void main (String[] args){
         try {
+            String menu = //Menú que se mostrará
+                    "\nOpciones disponibles: \n\n" +
+                            "1 - Añadir Cliente.\n" +
+                            "2 - Listar Clientes.\n" +
+                            "3 - Buscar Clientes.\n" +
+                            "4 - Borrar Cliente.\n" +
+                            "5 - Borrar fichero de clientes completamente.\n" +
+                            "0 - Salir de la aplicación.\n";
             String archivotemporal = System.getProperty("java.io.tmpdir") +"clientes.dat";
             System.out.println("Ruta del archivo temporal: " + archivotemporal);
-            String nif, nombre, telefono, direccion = "";
+            ListaObjetos lista = new ListaObjetos(new File(archivotemporal));
+            String nif, nombre, telefono, direccion;
             double deuda = 0.0;
-            ObjectInputStream flujoEntrada;
-            ObjectOutputStream flujoSalida;
             String opcionMenu = "";
             System.out.print(menu);
             opcionMenu = pausa();
@@ -32,9 +27,20 @@ public class Main {
                 Scanner teclado;
                 switch (opcionMenu){ //Switch para las opciones del menú.
                     case "1":
-                        System.out.print("\nIntroduzca el NIF: ");
-                        teclado = new Scanner(System.in);
-                        nif = teclado.nextLine();
+                        boolean valido = false;
+                        nif = "";
+                        while (!valido) {
+                            System.out.print("\nIntroduzca el NIF: ");
+                            teclado = new Scanner(System.in);
+                            nif = teclado.nextLine();
+                            String texto;
+                            if ((texto = CalculaNIF.isValido(nif))!= null){
+                                valido = true;
+                                System.out.println(texto);
+                            }else {
+                                System.out.println("\nNIF inválido!!");
+                            }
+                        }
                         System.out.print("\nIntroduzca el Nombre: ");
                         teclado = new Scanner(System.in);
                         nombre = teclado.nextLine();
@@ -44,96 +50,56 @@ public class Main {
                         System.out.print("\nIntroduzca la Dirección: ");
                         teclado = new Scanner(System.in);
                         direccion = teclado.nextLine();
-                        System.out.print("\nIntroduzca la deuda: ");
-                        teclado = new Scanner(System.in);
-                        deuda = Double.parseDouble(teclado.nextLine());
-                        Cliente tmp = new Cliente(nif, nombre, telefono, direccion, deuda);
-                        List<Cliente> lista = new ArrayList<Cliente>();
-                        flujoEntrada = new ObjectInputStream(new FileInputStream(archivotemporal));
-                        while (true){
+                        valido = false;
+                        while (!valido) {
+                            System.out.print("\nIntroduzca la deuda: ");
+                            teclado = new Scanner(System.in);
                             try {
-                                lista.add((Cliente) flujoEntrada.readObject());
-                            }catch (EOFException e){
-                                flujoEntrada.close();
-                                break;
+                                deuda = Double.parseDouble(teclado.nextLine());
+                                valido = true;
+                            } catch (NumberFormatException ex) {
+                                System.out.println("\nFormato de número incorrecto...");
                             }
                         }
-                        lista.add(tmp);
-                        flujoSalida= new ObjectOutputStream(new FileOutputStream(archivotemporal));
-                        for (Cliente cl: lista){
-                            flujoSalida.writeObject(cl);
-                        }
-                        flujoSalida.close();
+                        Cliente tmp = new Cliente(nif, nombre, telefono, direccion, deuda);
+                        lista.addObjeto(tmp);
                         opcionMenu = pausa();
                         break;
                     case "2":
                         Cliente cliente = null;
-                        flujoEntrada = new ObjectInputStream(new FileInputStream(archivotemporal));
-                        while (true){
-                            try {
-                                cliente = (Cliente) flujoEntrada.readObject();
-                                System.out.println(cliente.getNif());
-                            }catch (EOFException e){
-                                flujoEntrada.close();
-                                break;
-                            }
+                        for (Cliente x: lista.getLista()){
+                            System.out.println(x.toString());
                         }
                         opcionMenu = pausa();
                         break;
                     case "3":
-                        System.out.print("\nIntroduzca el NIF del cliente a buscar: ");
-                        teclado = new Scanner(System.in);
-                        nif = teclado.nextLine();
-                        flujoEntrada = new ObjectInputStream(new FileInputStream(archivotemporal));
-                        while (true){
-                            try {
-                                cliente = (Cliente) flujoEntrada.readObject();
-                                if (cliente.getNif().toLowerCase().equals(nif.toLowerCase())){
-                                    System.out.println(cliente.toString());
-                                }
-                            }catch (EOFException e){
-                                flujoEntrada.close();
-                                break;
+                        valido = false;
+                        nif = "";
+                        while (!valido) {
+                            System.out.print("\nIntroduzca el NIF del cliente a buscar: ");
+                            teclado = new Scanner(System.in);
+                            nif = teclado.nextLine();
+                            String texto;
+                            if ((texto = CalculaNIF.isValido(nif))!= null){
+                                valido = true;
+                                System.out.println(texto);
+                            }else {
+                                System.out.println("\nNIF inválido!!");
                             }
                         }
+                        System.out.println(lista.getObjeto(nif) != null?lista.getObjeto(nif).toString():"No existe ningún cliente con ese NIF...");
                         opcionMenu = pausa();
                         break;
                     case "4":
                         System.out.print("\nIntroduzca el NIF del cliente que desea eliminar: ");
                         teclado = new Scanner(System.in);
                         nif = teclado.nextLine();
-                        lista = new ArrayList<Cliente>();
-                        flujoEntrada = new ObjectInputStream(new FileInputStream(archivotemporal));
-                        boolean encontrado = false;
-                        while (true){
-                            try {
-                                cliente = (Cliente) flujoEntrada.readObject();
-                                if (!cliente.getNif().toLowerCase().equals(nif.toLowerCase())){
-                                    lista.add(cliente);
-                                }else{
-                                    System.out.println("Eliminando cliente: " + cliente.getNombre());
-                                    encontrado = true;
-                                }
-                            }catch (EOFException e){
-                                flujoEntrada.close();
-                                break;
-                            }
-                        }
-                        if (encontrado) {
-                            flujoSalida= new ObjectOutputStream(new FileOutputStream(archivotemporal));
-                            for (Cliente c : lista) {
-                                flujoSalida.writeObject(c);
-                            }
-                            flujoSalida.close();
-                        }else{
-                            System.out.println("No se encontró el cliente...");
-                        }
+                        lista.removeObjeto(nif);
                         opcionMenu = pausa();
                         break;
                     case "5":
-                        flujoSalida= new ObjectOutputStream(new FileOutputStream(archivotemporal));
-                        flujoSalida.close();
-                        opcionMenu = pausa();;
+                        System.out.println(lista.borrarArchivo());
+                        opcionMenu = "0";
                         break;
                     case "m":
                         System.out.print(menu);
@@ -147,7 +113,7 @@ public class Main {
                         break;
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -34,6 +34,6 @@ public class Cliente implements Serializable {
         return deuda;
     }
     public String toString(){
-        return "NIF: " + nif +  " Nombre: " + nombre + " Teléfono: " + telefono + " Dirección: " + direccion + " Deuda: " + deuda;
+        return "\nNIF: " + nif +  "\nNombre: " + nombre + "\nTeléfono: " + telefono + "\nDirección: " + direccion + "\nDeuda: " + deuda;
     }
 }
