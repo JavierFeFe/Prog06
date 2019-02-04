@@ -44,9 +44,19 @@ public class Main {
                         System.out.print("\nIntroduzca el Nombre: ");
                         teclado = new Scanner(System.in);
                         nombre = teclado.nextLine();
-                        System.out.print("\nIntroduzca el Teléfono: ");
-                        teclado = new Scanner(System.in);
-                        telefono = teclado.nextLine();
+                        valido = false;
+                        telefono = "";
+                        while (!valido) {
+                            System.out.print("\nIntroduzca el Teléfono: ");
+                            teclado = new Scanner(System.in);
+                            String tmp = teclado.nextLine();
+                            if (tmp.replaceAll(" ","").matches("^\\+?\\d+$")) {
+                                valido = true;
+                                telefono = tmp;
+                            }else{
+                                System.out.println("\nFormato de número incorrecto...");
+                            }
+                        }
                         System.out.print("\nIntroduzca la Dirección: ");
                         teclado = new Scanner(System.in);
                         direccion = teclado.nextLine();
