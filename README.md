@@ -9,7 +9,8 @@ Los datos que se almacenarán sobre cada cliente son:
 * Nombre.
 * Teléfono.
 * Dirección.
-* Deuda.
+* Deuda. 
+ 
 Mediante un menú se podrán realizar determinadas operaciones:
 
 * Añadir cliente. Esta opción pedirá los datos del cliente y añadirá el registro correspondiente en el fichero.
