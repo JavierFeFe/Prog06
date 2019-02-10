@@ -325,7 +325,7 @@ public class CalculaNIF {
 }
 
 ```
-*Esta es parte de un cdigo que conseguí de un proyecto de github la cual fue adaptada para este ejercico, supongo que el objetivo del ejercico era trabajar con ficheros secuenciales, no crear una clase para identificar un NIF válido*
+*He de decir que gran parte de este código para la verificación de un NIF no es mio sino de un proyecto de github el cual fue adaptado para este ejercico, supongo que el objetivo del ejercico era trabajar con ficheros secuenciales, no crear una clase para identificar un NIF válido, si no es así puedo crear mi propio código*
 
 ```Java
 package ejercicioTarea06;
