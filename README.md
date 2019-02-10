@@ -24,7 +24,7 @@ Elabora el programa y un documento con un procesador de texto. El documento debe
 
 En el documento escribirás un informe sobre todas las consideraciones oportunas que se necesiten para entender cómo has realizado la tarea.
 
-´´´ Java
+```Java
 package ejercicioTarea06;
 
 import java.io.Serializable;
@@ -64,4 +64,4 @@ public class Cliente implements Serializable {
         return "\nNIF: " + nif +  "\nNombre: " + nombre + "\nTeléfono: " + telefono + "\nDirección: " + direccion + "\nDeuda: " + deuda;
     }
 }
-´´´
+```
