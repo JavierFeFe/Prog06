@@ -65,4 +65,4 @@ public class Cliente implements Serializable {
     }
 }
 ```
-*Creo una clase simple con un método constructor y los getters y setter necesarios para el cliente
+*Creo una clase simple con un método constructor y los getters y setter necesarios para el cliente*
